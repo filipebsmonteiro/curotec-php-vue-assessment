@@ -3,6 +3,7 @@
 namespace App\Http\Services;
 
 use App\Models\Task;
+use App\Http\Services\TaskHistoryService;
 
 class TaskService
 {
@@ -29,10 +30,13 @@ class TaskService
 
     public function create(array $data): Task
     {
-        return Task::create([
+        $task = Task::create([
             ...$data,
             'user_id' => auth()->id()
         ]);
+
+        TaskHistoryService::log($task, 'created', $data);
+        return $task;
     }
 
     public function find(string $id): Task
@@ -43,7 +47,12 @@ class TaskService
     public function update(string $id, array $data): Task
     {
         $task = Task::findOrFail($id);
+        $original = $task->getOriginal();
+
         $task->update($data);
+
+        $changes = array_diff_assoc($task->getChanges(), $original);
+        TaskHistoryService::log($task, 'updated', $changes);
 
         return $task;
     }
@@ -51,6 +60,7 @@ class TaskService
     public function delete(string $id): void
     {
         $task = Task::findOrFail($id);
+        TaskHistoryService::log($task, 'deleted');
         $task->delete();
     }
 }

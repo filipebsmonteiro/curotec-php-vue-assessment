@@ -30,8 +30,6 @@ class TaskController extends Controller
      */
     public function store(StoreTaskRequest $request)
     {
-    //     dump('$request->all()');
-    //     dd($request->all());
         $task = $this->taskService->create($request->all());
         return $task;
     }
@@ -60,5 +58,11 @@ class TaskController extends Controller
     public function destroy(string $id)
     {
         $this->taskService->delete($id);
+    }
+
+    public function history(string $id)
+    {
+        $task = $this->taskService->find($id);
+        return response()->json($task->histories()->with('user')->latest()->get());
     }
 }

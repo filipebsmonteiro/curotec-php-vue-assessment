@@ -13,6 +13,8 @@ Route::middleware(\App\Http\Middleware\ForceJsonResponse::class)->group(function
         Route::post('/logout', [AuthController::class, 'logout']);
 
         Route::apiResource('/tasks', TaskController::class);
+        Route::get('/tasks/{id}/history', [TaskController::class, 'history']);
+
         Route::apiResource('/categories', CategoryController::class);
     });
 });

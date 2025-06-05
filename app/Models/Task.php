@@ -23,4 +23,9 @@ class Task extends Model
     public function categories() {
         return $this->belongsToMany(Category::class);
     }
+
+    public function histories()
+    {
+        return $this->hasMany(TaskHistory::class);
+    }
 }
