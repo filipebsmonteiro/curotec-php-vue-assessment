@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class StoreTaskRequest extends FormRequest
 {
@@ -11,7 +13,7 @@ class StoreTaskRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,12 +24,25 @@ class StoreTaskRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => ['required', 'string','min:3','max:255'],
+            'title' => ['required', 'string', 'min:3','max:255'],
             'description' => ['nullable', 'string'],
             'status' => ['required', 'in:pending,in_progress,completed'],
             'priority' => ['required', 'in:low,medium,high'],
             'category_ids' => ['nullable', 'array'],
             'category_ids.*' => ['integer', 'exists:categories,id'],
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'errors' => $validator->errors(),
+        ], 422));
+    }
+
+    public function passedValidation()
+    {
+        $data = json_decode($this->getContent(), true);
+        return $data;
     }
 }
