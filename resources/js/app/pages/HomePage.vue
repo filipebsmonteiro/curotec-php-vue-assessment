@@ -19,7 +19,7 @@
             <button
                 type="button"
                 class="px-2 py-1 bg-indigo-500 text-xs text-white rounded-md hover:bg-indigo-700"
-                @click="taskStore.fetchTasks(`date`)"
+                @click="taskStore.fetchTasks(`created_at`)"
             >Order by Date</button>
             <button
                 type="button"
