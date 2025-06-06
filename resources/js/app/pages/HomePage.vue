@@ -9,24 +9,27 @@
         />
     </div>
 
-    <LoginModal v-if="showModal" />
+    <RouterView />
 </template>
 
 <script setup>
 import { computed, watch } from 'vue';
 import KanbanColumn from '../components/KanbanColumn.vue';
 import { useTaskStore } from '../store/taskStore';
-import LoginModal from '../components/LoginModal.vue';
 import { storeToRefs } from 'pinia';
+import { routerKey, useRouter } from 'vue-router';
 
 
 const taskStore = useTaskStore();
+const router = useRouter();
 
-const showModal = computed(() => localStorage.getItem('token') === null);
-watch(showModal, (value) => {
+const isLoggedIn = computed(() => localStorage.getItem('token') !== null);
+watch(isLoggedIn, (value) => {
     if (!value) {
-        taskStore.fetchTasks();
+        router.push('/login');
+        return;
     }
+    taskStore.fetchTasks();
 }, { immediate: true });
 
 const columnStatuses = [
@@ -38,6 +41,7 @@ const { tasks } = storeToRefs(taskStore)
 const moveCard = async (taskId, newStatus) => {
     const task = tasks.value.find(task => task.id === taskId);
     if (task) {
+        // TODO: Update only if the status has changed
         await taskStore.updateTask({ id: taskId, status: newStatus })
         .then(() => {
             task.status = newStatus;

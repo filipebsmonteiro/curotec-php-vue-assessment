@@ -10,6 +10,10 @@ class AuthRepository extends Repository {
             password,
         });
     }
+
+    register(data) {
+        return this.$axios.post(`register`, data);
+    }
 }
 
 export default new AuthRepository()
