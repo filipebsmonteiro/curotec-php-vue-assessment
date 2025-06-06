@@ -13,8 +13,12 @@ class TaskService
             ->where('user_id', auth()->id());
 
         if (!empty($filters['category_id'])) {
-            $query->whereHas('categories', function ($q) use ($filters) {
-                $q->where('categories.id', $filters['category_id']);
+            $categoryIds = is_array($filters['category_id'])
+                ? $filters['category_id']
+                : [$filters['category_id']];
+
+            $query->whereHas('categories', function ($q) use ($categoryIds) {
+                $q->whereIn('category_id', $categoryIds);
             });
         }
 
@@ -35,6 +39,14 @@ class TaskService
             'user_id' => auth()->id()
         ]);
 
+        if (!empty($data['category_id'])) {
+            $categoryIds = is_array($data['category_id'])
+                ? $data['category_id']
+                : [$data['category_id']];
+
+            $task->categories()->attach($categoryIds);
+        }
+
         TaskHistoryService::log($task, 'created', $data);
         return $task;
     }
@@ -50,6 +62,14 @@ class TaskService
         $original = $task->getOriginal();
 
         $task->update($data);
+
+        if (array_key_exists('category_id', $data)) {
+            $categoryIds = is_array($data['category_id'])
+                ? $data['category_id']
+                : [$data['category_id']];
+
+            $task->categories()->sync($categoryIds);
+        }
 
         $changes = array_diff_assoc($task->getChanges(), $original);
         TaskHistoryService::log($task, 'updated', $changes);

@@ -10,9 +10,15 @@ class CategoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $query = Category::query();
+
+        if ($request->has('name')) {
+            $query->where('name', 'like', '%' . $request->input('name') . '%');
+        }
+
+        return response()->json($query->limit(10)->get(), 200);
     }
 
     /**
@@ -20,7 +26,13 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        $category = Category::create($validated);
+
+        return response()->json($category, 201);
     }
 
     /**
@@ -28,7 +40,7 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        //
+        return response()->json($category, 200);
     }
 
     /**
@@ -36,7 +48,13 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        $category->update($validated);
+
+        return response()->json($category, 200);
     }
 
     /**
@@ -44,6 +62,8 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        $category->delete();
+
+        return response()->json(null, 204);
     }
 }
