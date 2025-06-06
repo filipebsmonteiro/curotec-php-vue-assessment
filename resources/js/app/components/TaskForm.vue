@@ -39,7 +39,20 @@
             {{ category.name }}
             </option>
         </select>
-        </div>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Priority</label>
+        <select
+            v-model="priority"
+            class="border p-2 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+        >
+            <option disabled value="">Select the priority</option>
+            <option v-for="priority in ['low', 'medium', 'high']" :key="priority" :value="priority">
+            {{ priority }}
+            </option>
+        </select>
+      </div>
     </div>
 
     <template #footer>
@@ -72,6 +85,7 @@ import { storeToRefs } from 'pinia';
 const title = ref('');
 const description = ref('');
 const categoryId = ref('');
+const priority = ref('');
 
 const route = useRoute();
 const router = useRouter();
@@ -94,7 +108,8 @@ const fetchTask = async () => {
     if (task) {
         title.value = task.title;
         description.value = task.description;
-        categoryId.value = task.category_id ?? '';
+        categoryId.value = task.categories.map((c) => c.id) ?? '';
+        priority.value = task.priority;
     }
 };
 
@@ -104,6 +119,7 @@ const submitForm = async () => {
       title: title.value,
       description: description.value,
       category_id: categoryId.value || null,
+      priority: priority.value,
     };
 
     if (isEdit.value) {

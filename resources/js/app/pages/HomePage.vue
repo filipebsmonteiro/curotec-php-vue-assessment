@@ -1,12 +1,31 @@
 <template>
 
     <div class=" p-5 bg-gray-100 min-h-screen">
-        <div class="flex justify-between items-center mb-4">
-            <SearchTasks v-if="route.name == `home`" />
+        <div class="flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <SearchTasks v-if="route.name == `home`" />
+            </div>
             <RouterLink
                 to="/category-create"
                 class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
             >Create Category</RouterLink>
+        </div>
+        <div class="flex gap-2 items-center my-2">
+            <button
+                type="button"
+                class="px-2 py-1 bg-indigo-500 text-xs text-white rounded-md hover:bg-indigo-700"
+                @click="taskStore.fetchTasks(`status`)"
+            >Order by Status</button>
+            <button
+                type="button"
+                class="px-2 py-1 bg-indigo-500 text-xs text-white rounded-md hover:bg-indigo-700"
+                @click="taskStore.fetchTasks(`date`)"
+            >Order by Date</button>
+            <button
+                type="button"
+                class="px-2 py-1 bg-indigo-500 text-xs text-white rounded-md hover:bg-indigo-700"
+                @click="taskStore.fetchTasks(`priority`)"
+            >Order by Priority</button>
         </div>
 
         <div class="flex justify-around gap-2">

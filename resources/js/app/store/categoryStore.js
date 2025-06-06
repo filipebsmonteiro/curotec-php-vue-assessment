@@ -4,6 +4,7 @@ import CategoryRepository from '../repositories/CategoryRepository';
 export const useCategoryStore = defineStore('category', {
   state: () => ({
     categories: [],
+    selected: [],
     isLoading: false,
   }),
 
