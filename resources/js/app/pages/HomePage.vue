@@ -5,10 +5,16 @@
             <div class="flex items-center gap-2">
                 <SearchTasks v-if="route.name == `home`" />
             </div>
-            <RouterLink
-                to="/category-create"
-                class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
-            >Create Category</RouterLink>
+            <div>
+                <RouterLink
+                    to="/category-create"
+                    class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+                >Create Category</RouterLink>
+                <button
+                    @click="localStorage.removeItem('token');"
+                    class="px-2 py-1 text-sm ml-2 bg-gray-600 text-white rounded-md hover:bg-indigo-700"
+                >Logout</button>
+            </div>
         </div>
         <div class="flex gap-2 items-center my-2">
             <button

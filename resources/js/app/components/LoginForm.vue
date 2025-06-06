@@ -7,6 +7,7 @@
           type="email"
           v-model="email"
           placeholder="Enter your email"
+          class="border p-2 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
         />
 
         <label>Password:</label>
@@ -14,9 +15,11 @@
           type="password"
           v-model="password"
           placeholder="Enter your password"
+          class="border p-2 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
         />
     </div>
     <template #footer>
+      <RouterLink to="/register">Register</RouterLink>
       <button @click="submitForm">Login</button>
     </template>
   </BaseModal>
