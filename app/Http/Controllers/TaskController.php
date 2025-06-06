@@ -48,7 +48,7 @@ class TaskController extends Controller
      */
     public function update(UpdateTaskRequest $request, string $id)
     {
-        $task = $this->taskService->update($id, $request->data());
+        $task = $this->taskService->update($id, $request->all());
         return $task;
     }
 

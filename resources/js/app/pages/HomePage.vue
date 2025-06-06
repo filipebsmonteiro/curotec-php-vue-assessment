@@ -4,28 +4,44 @@
             v-for="status in columnStatuses"
             :key="status.key"
             :status="status"
-            :cards="cards.filter(card => card.status === status.key)"
+            :cards="tasks.filter(task => task.status === status.key)"
             @moveCard="moveCard"
         />
     </div>
+
+    <LoginModal v-if="showModal" />
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { computed, watch } from 'vue';
 import KanbanColumn from '../components/KanbanColumn.vue';
-const cards = ref([
-    { id: 1, title: 'Task 1', created_at: "2025-06-05T23:48:31.000000Z", status: 'pending' },
+import { useTaskStore } from '../store/taskStore';
+import LoginModal from '../components/LoginModal.vue';
+import { storeToRefs } from 'pinia';
 
-]);
+
+const taskStore = useTaskStore();
+
+const showModal = computed(() => localStorage.getItem('token') === null);
+watch(showModal, (value) => {
+    if (!value) {
+        taskStore.fetchTasks();
+    }
+}, { immediate: true });
+
 const columnStatuses = [
     { key: 'pending', label: 'Pending' },
     { key: 'in_progress', label: 'In Progress' },
     { key: 'completed', label: 'Completed' }
 ];
-const moveCard = (cardId, newStatus) => {
-    const card = cards.value.find(card => card.id === cardId);
-    if (card) {
-        card.status = newStatus;
+const { tasks } = storeToRefs(taskStore)
+const moveCard = async (taskId, newStatus) => {
+    const task = tasks.value.find(task => task.id === taskId);
+    if (task) {
+        await taskStore.updateTask({ id: taskId, status: newStatus })
+        .then(() => {
+            task.status = newStatus;
+        });
     }
 };
 </script>

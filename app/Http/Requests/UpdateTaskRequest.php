@@ -39,4 +39,10 @@ class UpdateTaskRequest extends FormRequest
             'errors' => $validator->errors(),
         ], 422));
     }
+
+    public function passedValidation()
+    {
+        $data = json_decode($this->getContent(), true);
+        return $data;
+    }
 }
