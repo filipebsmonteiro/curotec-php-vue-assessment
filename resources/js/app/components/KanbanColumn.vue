@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-white shadow rounded p-4 flex-1 mx-2 flex flex-col gap-2" @dragover.prevent @drop="drop($event)">
+    <div class="bg-white shadow rounded p-4 flex-1 flex flex-col gap-2" @dragover.prevent @drop="drop($event)">
         <h2 class="font-bold mb-2">{{ status.label }}</h2>
         <KanbanCard v-for="card in cards" :key="card.id" :card="card"></KanbanCard>
     </div>

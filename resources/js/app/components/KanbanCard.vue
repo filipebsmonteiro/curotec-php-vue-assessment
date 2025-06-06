@@ -1,8 +1,10 @@
 <template>
-    <div class="relative p-5 bg-white border border-gray-200 task rounded-xl shadow-theme-sm dark:border-gray-800 dark:bg-white/5"
+    <div class="relative p-5 bg-white border border-gray-200 task rounded-xl shadow-theme-sm dark:border-gray-800 dark:bg-white/5 cursor-pointer"
         draggable="true"
         style="opacity: 0.8;"
-        @dragstart="dragStart($event, card)">
+        @dragstart="dragStart($event, card)"
+        @click="router.push(`/task/${card.id}`)"
+    >
         <div class="space-y-4">
             <div>
                 <h4 class="mb-5 mr-10 text-base text-gray-800 dark:text-white/90">
@@ -24,10 +26,15 @@
 <script setup>
 import { defineProps } from 'vue';
 import { parseDateString } from '../utils/parser';
+import { useRouter } from 'vue-router';
+
 
 const props = defineProps({
     card: Object,
 });
+
+const router = useRouter();
+
 const dragStart = (event, card) => {
     event.dataTransfer.setData('text/plain', card.id);
 };
